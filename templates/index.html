@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Microsoft Academic - Scrapper</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<div class="container login-container">
+    <div class="row">
+        <div class="col-md-6 login-form-1">
+            <h3>Result</h3>
+            <div class="form-group">
+                <center id="loader">
+                    <img src="/static/img/loader.gif" class="img-fluid col-3">
+                </center>
+                {% if result %}
+                    <a href="/static/documents/{{ result }}" id="result">
+                        <img src="/static/img/folder_icon_blue.png" class="img-fluid col-2"> {{ result }}
+                    </a>
+                {% endif %}
+            </div>
+            <small>(Click to download file)</small>
+        </div>
+        <div class="col-md-6 login-form-2">
+            <h3>Search Panel</h3>
+            <form method="GET" action="/">
+                <div class="row">
+                    <div class="form-group col-9">
+                        <select name="year" id="year" class="form-control" placeholder="Select Year">
+                            <option value="2017" {% if request.args.get('year') == "2017" %} selected {% endif %}>2017</option>
+                            <option value="2018" {% if request.args.get('year') == "2018" %} selected {% endif %}>2018</option>
+                            <option value="2019" {% if request.args.get('year') == "2019" %} selected {% endif %}>2019</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-light">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#loader").hide();
+    $("form").submit(function(e) {
+        $("#loader").show(); // show the ajax loader
+        {#$.ajax({#}
+        {#    type: 'GET',#}
+        {#    url: '/',#}
+        {#    data: {#}
+        {#        'year': $("#year").val(),#}
+        {#    },#}
+        {#    success: function () {#}
+        {#        $("#loader").hide();  // this will hide the loader and replace it with the data#}
+        {#        $("#result").show();#}
+        {#    }#}
+        {#});#}
+    });
+</script>
+</body>
+</html>
+
