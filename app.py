@@ -5,6 +5,7 @@ import csv
 import http.client
 import json
 from datetime import date, datetime
+import multiprocessing
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static', 'documents')
@@ -18,11 +19,16 @@ conf = ConfigFactory.parse_file(app.config['CONFIG_FOLDER']+'/apikey.conf')
 
 @app.route('/', methods=['GET', 'POST'])
 def index(result=None):
+    q = multiprocessing.Queue()
     if request.args.get('year', None):
-        result = crawler(request.args['year'])
+        p1 = multiprocessing.Process(target=crawler, args=(request.args['year'], q))
+        # result = crawler(request.args['year'])
+        p1.start()
+        p1.join()
+        result = q.get()
     return render_template('index.html', result=result)
 
-def crawler(year):
+def crawler(year, q):
     fname = str(datetime.now()) + '-MA-(data for '+year+').csv'
     conn = http.client.HTTPSConnection("api.labs.cognitive.microsoft.com")
 
@@ -64,7 +70,7 @@ def crawler(year):
                     no, x['Id'], '', x['Ti'], aa3, x['Y'], None
                 ])
             no += 1
-
+    q.put(fname)
     return fname
 
 if __name__ == '__main__':
