@@ -3,7 +3,7 @@ from flask import Flask, render_template, request
 import csv
 import http.client
 import json
-from datetime import date
+from datetime import date, datetime
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static','documents')
@@ -18,9 +18,10 @@ def index(result=None):
     return render_template('index.html', result=result)
 
 def crawler(year):
+    fname = str(datetime.now()) + '-MA-(data for '+year+').csv'
     conn = http.client.HTTPSConnection("api.labs.cognitive.microsoft.com")
 
-    payload = "expr=And(Composite(AA.AfN=='gadjah mada university'),Y="+year+",L='en')&attributes=Id,C.CId,C.CN,L,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN,E.DOI&offset=0&count=10000"
+    payload = "expr=And(Composite(AA.AfN=='gadjah mada university'),Y="+year+",L='en')&attributes=Id,C.CId,C.CN,L,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN,E.DOI&offset=0&count=3000"
 
     headers = {
         'content-type': "application/x-www-form-urlencoded",
@@ -33,23 +34,33 @@ def crawler(year):
     v = json.loads(response.read().decode("utf-8"))
     no = 1
 
-    with open(os.path.join(app.config['UPLOAD_FOLDER'], str(date.today()) + '-MA-(data for '+year+').csv'), mode='w') as f:
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], fname), mode='w') as f:
         z = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        z.writerow(["No", "Title", "Author", "Year", "DOI"])
+        z.writerow(["No", "Id", "Fakultas", "Title", "Author", "Year", "DOI"])
         for x in v['entities']:
-            # x1 = str(x['AA'])
-            # x2 = x1.replace("'}, {'AfN': '",", ")
+            aa = []
+            for xx in x['AA']:
+                try:
+                    au = xx['AuN'] + " (" + xx['AfN'] + "), "
+                except KeyError:
+                    au = xx['AuN'] + ", "
+                aa.append(au)
+
+            aa1 = str(aa).replace("['", "")
+            aa2 = aa1.replace("', '", "")
+            aa3 = aa2.replace(" ']", "")
+
             try:
                 z.writerow([
-                    no, x['Ti'], x['AA'], x['Y'], x['DOI']
+                    no, x['Id'], '', x['Ti'], aa3, x['Y'], x['DOI']
                 ])
             except KeyError:
                 z.writerow([
-                    no, x['Ti'], x['Y'], None
+                    no, x['Id'], '', x['Ti'], aa3, x['Y'], None
                 ])
             no += 1
 
-    return str(date.today())+'-MA-(data for '+year+').csv'
+    return fname
 
 if __name__ == '__main__':
     app.run()
