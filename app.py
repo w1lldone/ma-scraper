@@ -1,15 +1,20 @@
 import os
 from flask import Flask, render_template, request
+from pyhocon import ConfigFactory
 import csv
 import http.client
 import json
 from datetime import date, datetime
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static','documents')
+UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static', 'documents')
+CONFIG_FOLDER = os.path.join(APP_ROOT, 'config')
 
 app = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['CONFIG_FOLDER'] = CONFIG_FOLDER
+
+conf = ConfigFactory.parse_file(app.config['CONFIG_FOLDER']+'/apikey.conf')
 
 @app.route('/', methods=['GET', 'POST'])
 def index(result=None):
@@ -25,7 +30,7 @@ def crawler(year):
 
     headers = {
         'content-type': "application/x-www-form-urlencoded",
-        'ocp-apim-subscription-key': "910f7d70387c416a8a3fedfe5141251d",
+        'ocp-apim-subscription-key': conf.get_string("APIkey.key"),
     }
 
     conn.request("POST", "/academic/v1.0/evaluate", payload, headers)
