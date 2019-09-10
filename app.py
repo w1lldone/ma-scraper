@@ -32,7 +32,7 @@ def crawler(year, q):
     fname = str(datetime.now()) + '-MA-(data for '+year+').csv'
     conn = http.client.HTTPSConnection("api.labs.cognitive.microsoft.com")
 
-    payload = "expr=And(Composite(AA.AfN=='gadjah mada university'),Y="+year+",L='en')&attributes=Id,C.CId,C.CN,L,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN,E.DOI&offset=0&count=3000"
+    payload = "expr=And(Composite(AA.AfN=='gadjah mada university'),Y="+year+")&attributes=Id,C.CId,C.CN,L,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN,E.DOI&offset=0&count=3000"
 
     headers = {
         'content-type': "application/x-www-form-urlencoded",
@@ -47,7 +47,7 @@ def crawler(year, q):
 
     with open(os.path.join(app.config['UPLOAD_FOLDER'], fname), mode='w') as f:
         z = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        z.writerow(["No", "Id", "Fakultas", "Title", "Author", "Year", "DOI"])
+        z.writerow(["No", "Id", "Fakultas", "Title", "Author", "Year", "DOI", "Language"])
         for x in v['entities']:
             aa = []
             for xx in x['AA']:
@@ -63,15 +63,25 @@ def crawler(year, q):
 
             try:
                 z.writerow([
-                    no, x['Id'], '', x['Ti'], aa3, x['Y'], x['DOI']
+                    no, x['Id'], '', x['Ti'], aa3, x['Y'], x['DOI'], x['L'].replace("@@@", ", ")
                 ])
             except KeyError:
-                z.writerow([
-                    no, x['Id'], '', x['Ti'], aa3, x['Y'], None
-                ])
+                try:
+                    z.writerow([
+                        no, x['Id'], '', x['Ti'], aa3, x['Y'], None, x['L'].replace("@@@", ", ")
+                    ])
+                except KeyError:
+                    try:
+                        z.writerow([
+                            no, x['Id'], '', x['Ti'], aa3, x['Y'], x['DOI'], None
+                        ])
+                    except KeyError:
+                        z.writerow([
+                            no, x['Id'], '', x['Ti'], aa3, x['Y'], None, None
+                        ])
             no += 1
     q.put(fname)
     return fname
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
