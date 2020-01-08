@@ -21,18 +21,18 @@ conf = ConfigFactory.parse_file(app.config['CONFIG_FOLDER']+'/apikey.conf')
 def index(result=None):
     q = multiprocessing.Queue()
     if request.args.get('year', None):
-        p1 = multiprocessing.Process(target=crawler, args=(request.args['year'], q))
+        p1 = multiprocessing.Process(target=crawler, args=(request.args['year'], request.args['category'], q))
         # result = crawler(request.args['year'])
         p1.start()
         p1.join()
         result = q.get()
-    return render_template('index.html', result=result)
+    return render_template('index2.html', result=result)
 
-def crawler(year, q):
+def crawler(year, category, q):
     fname = str(datetime.now()) + '-MA-(data for '+year+').csv'
     conn = http.client.HTTPSConnection("api.labs.cognitive.microsoft.com")
 
-    payload = "expr=And(Composite(AA.AfN=='gadjah mada university'),Y="+year+")&attributes=Id,C.CId,C.CN,L,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN&offset=0&count=1000"
+    payload = "expr=And(Composite(AA.AfN=='gadjah mada university'),Y="+year+",Or("+category+"))&attributes=Id,C.CId,C.CN,L,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN&offset=0&count=1000"
 
     headers = {
         'content-type': "application/x-www-form-urlencoded",

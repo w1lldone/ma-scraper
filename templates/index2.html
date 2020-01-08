@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Microsoft Academic - Scrapper</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<div class="container login-container">
+    <div class="row">
+        <div class="col-md-6 login-form-1">
+            <h3>Result</h3>
+            <div class="form-group">
+                <center id="loader">
+                    <img src="/static/img/loader.gif" class="img-fluid col-3">
+                </center>
+                {% if result %}
+                    <a href="/static/documents/{{ result }}" id="result">
+                        <img src="/static/img/folder_icon_blue.png" class="img-fluid col-2"> {{ result }}
+                    </a>
+                {% endif %}
+            </div>
+            <small>(Click to download file)</small>
+        </div>
+        <div class="col-md-6 login-form-2">
+            <h3>Search Panel</h3>
+            <form method="GET" action="/">
+                <div class="row text-white">
+                    <div class="col-md-6">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="noPoverty" value="Composite(F.FN='poverty'),Composite(F.FN='economic growth'),Composite(F.FN='poorness'),Composite(F.FN='malnutrition'),Composite(F.FN='imigration'),Composite(F.FN='unenployment'),Composite(F.FN='homeless'),Composite(F.FN='corruption'),Composite(F.FN='charity'),Composite(F.FN='apathy'),Composite(F.FN='underdevelopment'),Composite(F.FN='beggar')">
+                            <label class="form-check-label" for="noPoverty">No Poverty</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="zeroHunger" value="Composite(F.FN='hunger'),Composite(F.FN='starvation response'),Composite(F.FN='starvation ketosis'),Composite(F.FN='starvation ketoacidosis'),Composite(F.FN='starvation monitoring'),Composite(F.FN='starvation edema'),Composite(F.FN='nutrition transition'),Composite(F.FN='nutrition facts label'),Composite(F.FN='eat'),Composite(F.FN='food security'),Composite(F.FN='freshwater ecosystem'),Composite(F.FN='fresh water biology')">
+                            <label class="form-check-label" for="zeroHunger">Zero Hunger</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="goodHealth" value="Composite(F.FN='health care'),Composite(F.FN='health informatics'),Composite(F.FN='health statistics'),Composite(F.FN='health equity'),Composite(F.FN='health organization'),Composite(F.FN='disease'),Composite(F.FN='maternal near miss'),Composite(F.FN='maternal and child health journal'),Composite(F.FN='maternal death'),Composite(F.FN='maternal effect'),Composite(F.FN='hygiene')">
+                            <label class="form-check-label" for="goodHealth">Good Health</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="qualityEducation" value="Composite(F.FN='quality education'),Composite(F.FN='schools')">
+                            <label class="form-check-label" for="qualityEducation">Quality Education</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="genderEquality" value="Composite(F.FN='gender equality'),Composite(F.FN='discrimination women'),Composite(F.FN='discrimination girls'),Composite(F.FN='discrimination gender'),Composite(F.FN='race color')">
+                            <label class="form-check-label" for="genderEquality">Gender Equality</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="waterSanitation" value="Composite(F.FN='clean water'),Composite(F.FN='sanitation'),Composite(F.FN='hygiene'),Composite(F.FN='water quality'),Composite(F.FN='river pollution'),Composite(F.FN='water pollution')">
+                            <label class="form-check-label" for="waterSanitation">Water Sanitation</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="affordable" value="Composite(F.FN='clean energy'),Composite(F.FN='cheap energy'),Composite(F.FN='green energy'),Composite(F.FN='energy source'),Composite(F.FN='energy resources'),Composite(F.FN='renewable energy'),Composite(F.FN='fossil energy'),Composite(F.FN='alternative energy')">
+                            <label class="form-check-label" for="affordable">Affordable and Clean Energy</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="economicGrowth" value="Composite(F.FN='decent work'),Composite(F.FN='economic growth'),Composite(F.FN='unemployment'),Composite(F.FN='job quality'),Composite(F.FN='economic development')">
+                            <label class="form-check-label" for="economicGrowth">Economic Growth</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="infraIndust" value="Composite(F.FN='transportation planning'),Composite(F.FN='transportation theory'),Composite(F.FN='transportation cost'),Composite(F.FN='irrigation'),Composite(F.FN='information technology'),Composite(F.FN='information infrastructure'),Composite(F.FN='manufacturing'),Composite(F.FN='innovation competition'),Composite(F.FN='innovation intermediary'),Composite(F.FN='innovation system'),Composite(F.FN='emission carbon dioxide'),Composite(F.FN='small industry'),Composite(F.FN='industrialisation')">
+                            <label class="form-check-label" for="infraIndust">Infrastructure and Industrialization</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="reduceInequality" value="Composite(F.FN='equal rights'),Composite(F.FN='racism'),Composite(F.FN='human rights'),Composite(F.FN='equality'),Composite(F.FN='fairness'),Composite(F.FN='discrimination')">
+                            <label class="form-check-label" for="reduceInequality">Reduce Inequality</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="sustainableCities" value="Composite(F.FN='air pollution'),Composite(F.FN='urbanization'),Composite(F.FN='city'),Composite(F.FN='urban transformation'),Composite(F.FN='housing'),Composite(F.FN='urban')">
+                            <label class="form-check-label" for="sustainableCities">Sustainable Cities</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="consumption" value="Composite(F.FN='energy efficiency'),Composite(F.FN='energy recycling'),Composite(F.FN='sustainable industries'),Composite(F.FN='sustainable production'),Composite(F.FN='sustainable consumption'),Composite(F.FN='renewable energy')">
+                            <label class="form-check-label" for="consumption">Sustainable Consumption and Production</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="climateChange" value="Composite(F.FN='climate change'),Composite(F.FN='global warming'),Composite(F.FN='greenhouse effect'),Composite(F.FN='gas emissions')">
+                            <label class="form-check-label" for="climateChange">Climate Change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="oceanLife" value="Composite(F.FN='marine pollution'),Composite(F.FN='sea pollution'),Composite(F.FN='ocean pollution'),Composite(F.FN='marine ecosystem'),Composite(F.FN='fishery'),Composite(F.FN='zooplankton'),Composite(F.FN='ocean'),Composite(F.FN='maritime industry')">
+                            <label class="form-check-label" for="oceanLife">Ocean Life</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="lifeLand" value="Composite(F.FN='forest sustainability'),Composite(F.FN='land degradation'),Composite(F.FN='biodiversity'),Composite(F.FN='desertification'),Composite(F.FN='deforestation'),Composite(F.FN='drought tolerance'),Composite(F.FN='drought stress'),Composite(F.FN='drought risk'),Composite(F.FN='drought resistance')">
+                            <label class="form-check-label" for="lifeLand">Life on Land</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="justice" value="Composite(F.FN='justice'),Composite(F.FN='corruption'),Composite(F.FN='peace'),Composite(F.FN='bribery'),Composite(F.FN='tax evasion'), Composite(F.FN='child trafficking'),Composite(F.FN='child abuse'), Composite(F.FN='birth registration'),Composite(F.FN='mass killing'),Composite(F.FN='law policy')">
+                            <label class="form-check-label" for="justice">Peace Justice and Strong Institution</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="category" id="globalPartnership" value="Composite(F.FN='finance'),Composite(F.FN='government'),Composite(F.FN='developing country')">
+                            <label class="form-check-label" for="globalPartnership">Global Partnership</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="form-group col-9">
+                        <select name="year" id="year" class="form-control" placeholder="Select Year">
+                            <option value="2017" {% if request.args.get('year') == "2017" %} selected {% endif %}>2017</option>
+                            <option value="2018" {% if request.args.get('year') == "2018" %} selected {% endif %}>2018</option>
+                            <option value="2019" {% if request.args.get('year') == "2019" %} selected {% endif %}>2019</option>
+                            <option value="2020" {% if request.args.get('year') == "2020" %} selected {% endif %}>2020</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-light">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#loader").hide();
+    $("form").submit(function(e) {
+        $("#loader").show(); // show the ajax loader
+        {#$.ajax({#}
+        {#    type: 'GET',#}
+        {#    url: '/',#}
+        {#    data: {#}
+        {#        'year': $("#year").val(),#}
+        {#    },#}
+        {#    success: function () {#}
+        {#        $("#loader").hide();  // this will hide the loader and replace it with the data#}
+        {#        $("#result").show();#}
+        {#    }#}
+        {#});#}
+    });
+</script>
+</body>
+</html>
+
