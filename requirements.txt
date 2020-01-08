@@ -18,7 +18,7 @@ packaging==16.8
 pyhocon==0.3.51
 pyparsing==2.4.2
 pytz==2017.2
-PyYAML==3.12
+PyYAML==5.1
 six==1.12.0
 static3==0.7.0
 tzlocal==2.0.0
