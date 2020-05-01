@@ -32,7 +32,7 @@ def crawler(year, category, q):
     fname = str(datetime.now()) + '-MA-(data for '+year+').csv'
     conn = http.client.HTTPSConnection("api.labs.cognitive.microsoft.com")
 
-    payload = "expr=And(Composite(AA.AfN=='gadjah mada university'),Y="+year+",Or("+category+"))&attributes=Id,C.CId,C.CN,L,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN&offset=0&count=1000"
+    payload = "expr=And(Composite(AA.AfN=='gadjah mada university'),Y="+year+",Or("+category+"))&attributes=Id,C.CId,C.CN,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN&offset=0&count=1000"
 
     headers = {
         'content-type': "application/x-www-form-urlencoded",
